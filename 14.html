@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>發現大絲路 | 14天中亞奇幻之旅</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        muji: {
+                            bg: '#f9f8f6',
+                            text: '#4a4a4a',
+                            light: '#e8e4db',
+                            accent: '#bfa78a',
+                            dark: '#8b7861'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 隱藏水平捲軸但保留滾動功能 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        
+        /* 時間軸線條 */
+        .timeline-line {
+            position: absolute;
+            left: 23px; /* icon center */
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background-color: #e8e4db;
+            z-index: 0;
+        }
+        .timeline-item:last-child .timeline-line {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-muji-bg text-muji-text font-sans antialiased selection:bg-muji-accent selection:text-white">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-3xl mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-widest text-muji-dark">發現大絲路</h1>
+            <div class="text-sm text-gray-500"><i class="far fa-calendar-alt mr-1"></i>6/18 - 7/1</div>
+        </div>
+        
+        <!-- 主導航 Tabs -->
+        <div class="flex border-b border-gray-200 text-center text-sm font-medium">
+            <button onclick="switchMainTab('itinerary')" id="tabBtn-itinerary" class="flex-1 py-3 text-muji-dark border-b-2 border-muji-accent transition-all">行程明細</button>
+            <button onclick="switchMainTab('customs')" id="tabBtn-customs" class="flex-1 py-3 text-gray-400 border-b-2 border-transparent transition-all">通關總表</button>
+            <button onclick="switchMainTab('tools')" id="tabBtn-tools" class="flex-1 py-3 text-gray-400 border-b-2 border-transparent transition-all">實用工具</button>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto pb-20">
+        
+        <!-- ================= [ 視圖 1: 行程明細 ] ================= -->
+        <div id="view-itinerary" class="block">
+            <!-- 天數橫向導航 -->
+            <div class="overflow-x-auto no-scrollbar bg-white py-3 px-4 shadow-sm mb-4">
+                <div class="flex space-x-3">
+                    <!-- JS 自動生成 Day Buttons -->
+                    <script>
+                        for(let i=1; i<=14; i++){
+                            document.write(`<button onclick="showDay(${i})" id="dayBtn-${i}" class="whitespace-nowrap px-4 py-1.5 rounded-full text-sm transition-all ${i===1 ? 'bg-muji-dark text-white' : 'bg-muji-light text-muji-text hover:bg-gray-200'}">Day ${i}</button>`);
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <!-- 天數內容容器 -->
+            <div class="px-4">
+                
+                <!-- Day 1 -->
+                <div id="day-1" class="day-content">
+                    <img src="https://images.unsplash.com/photo-1550850839-8d232e616f73?w=800&q=80" alt="Chongqing" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 1：啟程重慶</h2>
+                    
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center z-10"><i class="fas fa-plane"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">19:30 - 22:55</div>
+                        <h3 class="text-lg font-bold">飛往重慶</h3>
+                        <p class="text-sm mt-1">航班：台北松山(TSA) -> 重慶江北(CKG)</p>
+                    </div>
+                    
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">晚餐</div>
+                        <h3 class="text-lg font-bold">飛機餐 / <a href="https://maps.google.com/?q=重慶嘿火串串火鍋" target="_blank" class="text-muji-accent underline">嘿火串串火鍋</a></h3>
+                        <p class="text-sm mt-1 text-gray-600">必吃：雙椒牛肉、涼蝦（約人民幣64/人）</p>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-bed"></i></div>
+                        <h3 class="text-lg font-bold mt-2"><button onclick="openTaxi('洪崖疊院飯店', '重庆市渝中区解放碑洪崖洞')" class="text-muji-dark underline hover:text-black">洪崖疊院飯店 (重慶解放碑洪崖洞店)</button></h3>
+                        <p class="text-sm mt-1 text-gray-600">住宿花費：2452台幣/4人</p>
+                    </div>
+                </div>
+
+                <!-- Day 2 -->
+                <div id="day-2" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1574872125636-f089bd245a44?w=800&q=80" alt="Chongqing City" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 2：重慶一日遊與中亞航班</h2>
+                    
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">早餐</div>
+                        <h3 class="text-lg font-bold">附近的重慶小麵或抄手</h3>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center z-10"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">上午</div>
+                        <h3 class="text-lg font-bold">市區觀光</h3>
+                        <p class="text-sm mt-1 text-gray-600 flex flex-wrap gap-2">
+                            <a href="https://maps.google.com/?q=重慶李子壩" target="_blank" class="bg-white border px-2 py-1 rounded text-muji-accent">李子壩</a>
+                            <a href="https://maps.google.com/?q=重慶解放碑" target="_blank" class="bg-white border px-2 py-1 rounded text-muji-accent">解放碑</a>
+                            <a href="https://maps.google.com/?q=重慶長江索道" target="_blank" class="bg-white border px-2 py-1 rounded text-muji-accent">長江索道</a>
+                            <a href="https://maps.google.com/?q=重慶洪崖洞" target="_blank" class="bg-white border px-2 py-1 rounded text-muji-accent">洪崖洞</a>
+                        </p>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">午餐</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=重慶磁器口觀光街" target="_blank" class="text-muji-accent underline">磁器口觀光街</a></h3>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center z-10"><i class="fas fa-plane"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">17:15 - 23:35</div>
+                        <h3 class="text-lg font-bold">飛往塔什干(Tashkent)</h3>
+                        <p class="text-sm mt-1">重慶 17:15 -> 烏魯木齊 21:25 (轉機) 23:15 -> 塔什干 23:35</p>
+                        <p class="text-sm text-gray-500">晚餐：飛機餐</p>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-bed"></i></div>
+                        <h3 class="text-lg font-bold mt-2"><button onclick="openTaxi('絲路飯店 (Silk Road Hotel)', 'Toshkent, O\'zbekiston (Silk Road Hotel)')" class="text-muji-dark underline hover:text-black">絲路飯店</button></h3>
+                        <p class="text-sm mt-1 text-gray-600">住宿花費：2476台幣/2間 (含早餐)</p>
+                    </div>
+                </div>
+
+                <!-- Day 3 -->
+                <div id="day-3" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1591040316041-3b5ce8d5f661?w=800&q=80" alt="Tashkent" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 3：塔什干市區與高鐵體驗</h2>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center z-10"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">白天</div>
+                        <h3 class="text-lg font-bold">塔什干市區漫步</h3>
+                        <p class="text-sm mt-1 text-gray-600 flex flex-col gap-2">
+                            <a href="https://maps.google.com/?q=塔什干應用藝術博物館" target="_blank" class="text-muji-accent underline">應用藝術博物館</a>
+                            <a href="https://maps.google.com/?q=Tashkent CityMall" target="_blank" class="text-muji-accent underline">CityMall</a>
+                            <a href="https://maps.google.com/?q=塔什干帖木兒廣場" target="_blank" class="text-muji-accent underline">帖木兒廣場</a>
+                            <a href="https://maps.google.com/?q=塔什干鐵路博物館" target="_blank" class="text-muji-accent underline">鐵路博物館</a>
+                        </p>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">午餐</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=Tashkent Gijduvon Restaurant" target="_blank" class="text-muji-accent underline">Gijduvon Restaurant</a></h3>
+                        <p class="text-sm mt-1 text-gray-600">必吃：什錦烤肉拼盤</p>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">晚餐</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=Tashkent Besh Qozon" target="_blank" class="text-muji-accent underline">Besh Qozon</a></h3>
+                        <p class="text-sm mt-1 text-gray-600">必吃：烏茲別克抓飯 (Plov)</p>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center z-10"><i class="fas fa-train"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">19:48 - 00:01(+1)</div>
+                        <h3 class="text-lg font-bold">搭乘高鐵前往布哈拉</h3>
+                        <p class="text-sm mt-1">塔什干(Tashkent) -> 布哈拉(Bukhara)</p>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-bed"></i></div>
+                        <h3 class="text-lg font-bold mt-2"><button onclick="openTaxi('伊曼酒店 (Iman Hotel)', 'Buxoro, O\'zbekiston (Iman Hotel)')" class="text-muji-dark underline hover:text-black">伊曼酒店</button></h3>
+                        <p class="text-sm mt-1 text-gray-600">住宿花費：1728台幣/4人 (含早餐)</p>
+                    </div>
+                </div>
+
+                <!-- Day 4 -->
+                <div id="day-4" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1584725916024-9180731032d8?w=800&q=80" alt="Bukhara" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 4：布哈拉古城巡禮</h2>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center z-10"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">白天</div>
+                        <h3 class="text-lg font-bold">市區漫步</h3>
+                        <p class="text-sm mt-1 text-gray-600 flex flex-col gap-2">
+                            <a href="https://maps.google.com/?q=布哈拉雅克城堡" target="_blank" class="text-muji-accent underline">雅克城堡 (Ark of Bukhara)</a>
+                            <a href="https://maps.google.com/?q=布哈拉博伊卡楊建築群" target="_blank" class="text-muji-accent underline">博伊卡楊建築群 (Poi Kalan)</a>
+                            <a href="https://maps.google.com/?q=布哈拉薩曼尼陵墓" target="_blank" class="text-muji-accent underline">薩曼尼陵墓 (Samanid Mausoleum)</a>
+                            <a href="https://maps.google.com/?q=布哈拉圓頂市集" target="_blank" class="text-muji-accent underline">圓頂市集 (Trading Domes)</a>
+                        </p>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">午餐</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=Bukhara Oriental Tea House" target="_blank" class="text-muji-accent underline">Oriental Tea House</a></h3>
+                        <p class="text-sm mt-1 text-gray-600 text-xs leading-relaxed bg-white p-3 rounded shadow-sm border mt-2">
+                            推薦：Somsa烤餡餅, Lagman手工麵, Plov手抓飯<br>
+                            小吃：15,000～20,000 UZS<br>
+                            主餐：35,000～50,000 UZS (台幣 90-130)<br>
+                            *收 15% 服務費
+                        </p>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">晚餐</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=Bukhara Labi Hovuz" target="_blank" class="text-muji-accent underline">Labi Hovuz (需訂位)</a></h3>
+                        <p class="text-sm mt-1 text-gray-600 text-xs leading-relaxed bg-white p-3 rounded shadow-sm border mt-2">
+                            推薦：烤肉串(Shashlik), Samsa烤包子<br>
+                            烤肉：30,000～70,000 UZS<br>
+                            大份拼盤：500k～700k UZS
+                        </p>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center z-10"><i class="fas fa-train"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">18:14 - 19:51</div>
+                        <h3 class="text-lg font-bold">搭乘高鐵前往撒馬爾罕</h3>
+                    </div>
+
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-bed"></i></div>
+                        <h3 class="text-lg font-bold mt-2"><button onclick="openTaxi('桑佐精品酒店 (Sangzor Boutique Hotel)', 'Samarqand, O\'zbekiston')" class="text-muji-dark underline hover:text-black">桑佐精品酒店</button></h3>
+                        <p class="text-sm mt-1 text-gray-600">住宿花費：2332台幣/2間 (含早餐)</p>
+                    </div>
+                </div>
+
+                <!-- Day 5 to 14 omitted similar structures, building them out below -->
+                <!-- Day 5 -->
+                <div id="day-5" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1635338668700-1111152a4667?w=800&q=80" alt="Samarkand" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 5：撒馬爾罕之心</h2>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center z-10"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">白天</div>
+                        <h3 class="text-lg font-bold">壯麗的伊斯蘭建築</h3>
+                        <p class="text-sm mt-1 text-gray-600 flex flex-col gap-2">
+                            <a href="https://maps.google.com/?q=撒馬爾罕物魯伯天文台" target="_blank" class="text-muji-accent underline">物魯伯天文台</a>
+                            <a href="https://maps.google.com/?q=撒馬爾罕沙赫靜達陵墓群" target="_blank" class="text-muji-accent underline">沙赫靜達陵墓群 (Shah-i-Zinda)</a>
+                            <a href="https://maps.google.com/?q=撒馬爾罕比比哈努清真寺" target="_blank" class="text-muji-accent underline">比比哈努清真寺</a>
+                            <a href="https://maps.google.com/?q=撒馬爾罕西亞布市集" target="_blank" class="text-muji-accent underline">西亞布市集 (Siyob Bazaar)</a>
+                        </p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">午餐</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=Samarkand Bibikhanum Teahouse" target="_blank" class="text-muji-accent underline">比比哈奴茶館 (Bibikhanum Teahouse)</a></h3>
+                        <p class="text-sm mt-1 text-gray-600">推薦：核桃茄子捲、Lagman拉格曼麵、蒸餃、烤包子</p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">晚餐</div>
+                        <h3 class="text-lg font-bold">市集附近小吃攤</h3>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-bed"></i></div>
+                        <h3 class="text-lg font-bold mt-2"><button onclick="openTaxi('桑佐精品酒店 (Sangzor Boutique Hotel)', 'Samarqand, O\'zbekiston')" class="text-muji-dark underline hover:text-black">桑佐精品酒店</button></h3>
+                        <p class="text-sm mt-1 text-gray-600">同 6/21</p>
+                    </div>
+                </div>
+
+                <!-- Day 6 -->
+                <div id="day-6" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=800&q=80" alt="Train Journey" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 6：雷基斯坦廣場與跨國列車</h2>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center z-10"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">白天</div>
+                        <h3 class="text-lg font-bold">世界文化遺產</h3>
+                        <p class="text-sm mt-1 text-gray-600 flex flex-col gap-2">
+                            <a href="https://maps.google.com/?q=撒馬爾罕雷基斯坦廣場" target="_blank" class="text-muji-accent underline">雷基斯坦廣場 (Registan)</a>
+                            <a href="https://maps.google.com/?q=撒馬爾罕帖木兒墓" target="_blank" class="text-muji-accent underline">帖木兒墓 (Gur-e-Amir)</a>
+                            <a href="https://maps.google.com/?q=撒馬爾罕文化歷史博物館" target="_blank" class="text-muji-accent underline">文化歷史博物館</a>
+                        </p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">午餐</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=Samarkand Afandi food" target="_blank" class="text-muji-accent underline">Afandi food餐廳</a></h3>
+                        <p class="text-sm mt-1 text-gray-600">靠近雷基斯坦廣場，有烤肉串</p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center z-10"><i class="fas fa-train"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">19:31 - 09:33(+1)</div>
+                        <h3 class="text-lg font-bold">跨國火車 (每週二發車)</h3>
+                        <p class="text-sm mt-1 text-gray-600">撒馬爾罕 -> 杜尚別(塔吉克斯坦) (約50鎂)</p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-bed"></i></div>
+                        <h3 class="text-lg font-bold mt-2">夜宿火車上</h3>
+                        <p class="text-sm mt-1 text-gray-600">晚餐：7-11(?) 或自行準備乾糧</p>
+                    </div>
+                </div>
+
+                <!-- Day 7 -->
+                <div id="day-7" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1580218731383-7ef26e5fc502?w=800&q=80" alt="Dushanbe" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 7：抵達杜尚別</h2>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center z-10"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">上午 09:33 抵達</div>
+                        <h3 class="text-lg font-bold">市區漫步</h3>
+                        <p class="text-sm mt-1 text-gray-600 flex flex-col gap-2">
+                            <a href="https://maps.google.com/?q=杜尚別艾尼芭蕾歌劇院" target="_blank" class="text-muji-accent underline">艾尼芭蕾歌劇院</a>
+                            <a href="https://maps.google.com/?q=杜尚別navruz宮" target="_blank" class="text-muji-accent underline">Navruz宮</a>
+                            <a href="https://maps.google.com/?q=杜尚別國家博物館" target="_blank" class="text-muji-accent underline">國家博物館 / 國家圖書館</a>
+                            <a href="https://maps.google.com/?q=杜尚別旗桿" target="_blank" class="text-muji-accent underline">杜尚別旗桿與魯達基公園</a>
+                        </p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">午晚餐</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=Dushanbe SFC" target="_blank" class="text-muji-accent underline">SFC 速食</a> (午餐)</h3>
+                        <h3 class="text-lg font-bold mt-2"><a href="https://maps.google.com/?q=Dushanbe Restaurant Forel" target="_blank" class="text-muji-accent underline">Restaurant Forel</a> (晚餐)</h3>
+                        <p class="text-sm text-gray-600">晚餐必吃：鱒魚料理</p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-bed"></i></div>
+                        <h3 class="text-lg font-bold mt-2"><button onclick="openTaxi('Rumi Hotel', 'Dushanbe, Tojikiston (Rumi Hotel)')" class="text-muji-dark underline hover:text-black">Rumi Hotel</button></h3>
+                        <p class="text-sm mt-1 text-gray-600">住宿花費：連住2晚 7219台幣/4人 (含早餐)</p>
+                    </div>
+                </div>
+
+                <!-- Day 8 -->
+                <div id="day-8" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1433838552652-f9a46b332c40?w=800&q=80" alt="Nurek Lake" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 8：努雷克山中湖畔</h2>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center z-10"><i class="fas fa-mountain"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">全日行程</div>
+                        <h3 class="text-lg font-bold">Nurek Mountain Lake One day tour</h3>
+                        <p class="text-sm mt-1 text-gray-600">午餐：包含在行程內</p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">晚餐</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=Dushanbe Shomi Vakhdat" target="_blank" class="text-muji-accent underline">Shomi Vakhdat 餐廳</a></h3>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-bed"></i></div>
+                        <h3 class="text-lg font-bold mt-2"><button onclick="openTaxi('Rumi Hotel', 'Dushanbe, Tojikiston (Rumi Hotel)')" class="text-muji-dark underline hover:text-black">Rumi Hotel</button></h3>
+                        <p class="text-sm mt-1 text-gray-600">同 6/24</p>
+                    </div>
+                </div>
+
+                <!-- Day 9 -->
+                <div id="day-9" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80" alt="Iskandarkul" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 9：伊斯坎達爾湖秘境</h2>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center z-10"><i class="fas fa-mountain"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">全日行程</div>
+                        <h3 class="text-lg font-bold">Iskandarkul escape 2-day adventure</h3>
+                        <p class="text-sm mt-1 text-gray-600">探索范恩山脈 (Fann Mountains)</p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-bed"></i></div>
+                        <h3 class="text-lg font-bold mt-2">當地居民家 Local Stay</h3>
+                        <p class="text-sm mt-1 text-gray-600">包含晚餐與隔日早餐</p>
+                    </div>
+                </div>
+
+                <!-- Day 10 -->
+                <div id="day-10" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1550233486-1eb68097d722?w=800&q=80" alt="Fortress" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 10：吉薩爾堡壘</h2>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center z-10"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">白天</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=Dushanbe Hissor Fortress" target="_blank" class="text-muji-accent underline">杜尚別 Hissor Fortress</a></h3>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">午餐</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=Dushanbe Iskender" target="_blank" class="text-muji-accent underline">Iskender (小吃)</a></h3>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-bed"></i></div>
+                        <h3 class="text-lg font-bold mt-2"><button onclick="openTaxi('Rumi Hotel', 'Dushanbe, Tojikiston (Rumi Hotel)')" class="text-muji-dark underline hover:text-black">Rumi Hotel</button></h3>
+                        <p class="text-sm mt-1 text-gray-600">再次入住</p>
+                    </div>
+                </div>
+
+                <!-- Day 11 -->
+                <div id="day-11" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1585465922099-2708304c000e?w=800&q=80" alt="Bazaar" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 11：返回烏茲別克</h2>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center z-10"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">上午</div>
+                        <h3 class="text-lg font-bold">市區最後巡禮</h3>
+                        <p class="text-sm mt-1 text-gray-600 flex flex-col gap-2">
+                            <a href="https://maps.google.com/?q=塔吉克斯坦古物博物館" target="_blank" class="text-muji-accent underline">塔吉克斯坦古物博物館</a>
+                            <a href="https://maps.google.com/?q=Dushanbe Mehrgon bazaar" target="_blank" class="text-muji-accent underline">Mehrgon bazaar</a>
+                        </p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center z-10"><i class="fas fa-plane"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">16:40 - 17:40</div>
+                        <h3 class="text-lg font-bold">飛往塔什干</h3>
+                        <p class="text-sm mt-1 text-gray-600">航班：SZ225 (杜尚別 -> 塔什干)</p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-bed"></i></div>
+                        <h3 class="text-lg font-bold mt-2"><button onclick="openTaxi('塔什干舒克亞宏飯店', 'Toshkent, O\'zbekiston (Shukriya Hotel)')" class="text-muji-dark underline hover:text-black">塔什干舒克亞宏飯店</button></h3>
+                        <p class="text-sm mt-1 text-gray-600">住宿花費：兩晚 4645台幣/4人</p>
+                    </div>
+                </div>
+
+                <!-- Day 12 -->
+                <div id="day-12" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1520188740392-6f2991312386?w=800&q=80" alt="Tashkent Architecture" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 12：伊斯蘭文化巡禮</h2>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center z-10"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">白天</div>
+                        <h3 class="text-lg font-bold">塔什干景點</h3>
+                        <p class="text-sm mt-1 text-gray-600 flex flex-col gap-2">
+                            <a href="https://maps.google.com/?q=塔什干哈茲拉提伊瑪目廣場" target="_blank" class="text-muji-accent underline">哈茲拉提伊瑪目廣場</a>
+                            <a href="https://maps.google.com/?q=塔什干伊斯蘭文明博物館" target="_blank" class="text-muji-accent underline">伊斯蘭文明博物館</a>
+                            <a href="https://maps.google.com/?q=Tashkent Anhor Lokomotiv" target="_blank" class="text-muji-accent underline">Anhor Lokomotiv 遊樂園</a>
+                        </p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-bed"></i></div>
+                        <h3 class="text-lg font-bold mt-2"><button onclick="openTaxi('塔什干舒克亞宏飯店', 'Toshkent, O\'zbekiston (Shukriya Hotel)')" class="text-muji-dark underline hover:text-black">塔什干舒克亞宏飯店</button></h3>
+                        <p class="text-sm mt-1 text-gray-600">同 6/28</p>
+                    </div>
+                </div>
+
+                <!-- Day 13 -->
+                <div id="day-13" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&q=80" alt="Plov and Mall" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 13：採買與告別</h2>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center z-10"><i class="fas fa-shopping-bag"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">上午</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=塔什干楚蘇巴扎" target="_blank" class="text-muji-accent underline">楚蘇巴扎 (Chorsu Bazaar)</a></h3>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">午餐</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=塔什干手抓飯中心" target="_blank" class="text-muji-accent underline">中亞手抓飯中心 (Plov Center)</a></h3>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center z-10"><i class="fas fa-shopping-bag"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">晚餐 / 傍晚</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=Tashkent city mall" target="_blank" class="text-muji-accent underline">Tashkent City Mall</a></h3>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center z-10"><i class="fas fa-plane"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">21:00 起飛</div>
+                        <h3 class="text-lg font-bold">飛往北京</h3>
+                        <p class="text-sm mt-1 text-gray-600">塔什干(Tashkent) -> 北京</p>
+                        <p class="text-sm mt-1 text-gray-600">夜宿飛機上</p>
+                    </div>
+                </div>
+
+                <!-- Day 14 -->
+                <div id="day-14" class="day-content hidden">
+                    <img src="https://images.unsplash.com/photo-1508804185872-47d341904a08?w=800&q=80" alt="Home" class="w-full h-48 object-cover rounded-xl shadow-sm mb-6">
+                    <h2 class="text-2xl font-bold mb-6 text-muji-dark">Day 14：平安賦歸</h2>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center z-10"><i class="fas fa-utensils"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">清晨 05:25 抵達</div>
+                        <h3 class="text-lg font-bold"><a href="https://maps.google.com/?q=北京便宜坊烤鴨" target="_blank" class="text-muji-accent underline">便宜坊烤鴨 (早餐)</a></h3>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center z-10"><i class="fas fa-plane"></i></div>
+                        <div class="timeline-line"></div>
+                        <div class="text-sm text-gray-500 font-bold mb-1">08:25 - 11:40</div>
+                        <h3 class="text-lg font-bold">飛往台北</h3>
+                        <p class="text-sm mt-1 text-gray-600">北京(PEK) -> 台北桃園(TPE)</p>
+                    </div>
+                    <div class="relative timeline-item mb-8 pl-16">
+                        <div class="absolute left-1 top-1 w-10 h-10 rounded-full bg-muji-light text-muji-dark flex items-center justify-center z-10"><i class="fas fa-home"></i></div>
+                        <h3 class="text-lg font-bold mt-2">溫暖的家</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= [ 視圖 2: 通關英文總表 ] ================= -->
+        <div id="view-customs" class="hidden px-4 py-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-muji-dark"><span data-zh="行程總覽" data-en="Itinerary Summary">行程總覽</span></h2>
+                <button onclick="toggleLang()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded shadow-sm text-sm hover:bg-gray-50 transition">
+                    🔤 切換英文版
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-100">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-muji-light text-muji-dark">
+                        <tr>
+                            <th class="px-4 py-3" data-zh="日期" data-en="Date">日期</th>
+                            <th class="px-4 py-3" data-zh="地點 / 交通" data-en="Location / Transport">地點 / 交通</th>
+                            <th class="px-4 py-3" data-zh="住宿" data-en="Accommodation">住宿</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr>
+                            <td class="px-4 py-3">6/18</td>
+                            <td class="px-4 py-3" data-zh="台北 -> 重慶 (飛機)" data-en="Taipei -> Chongqing (Flight)">台北 -> 重慶 (飛機)</td>
+                            <td class="px-4 py-3" data-zh="洪崖疊院飯店" data-en="Hongya Dieyuan Hotel">洪崖疊院飯店</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">6/19</td>
+                            <td class="px-4 py-3" data-zh="重慶 -> 烏魯木齊 -> 塔什干" data-en="Chongqing -> Urumqi -> Tashkent">重慶 -> 烏魯木齊 -> 塔什干</td>
+                            <td class="px-4 py-3" data-zh="絲路飯店" data-en="Silk Road Hotel">絲路飯店</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">6/20</td>
+                            <td class="px-4 py-3" data-zh="塔什干 -> 布哈拉 (高鐵)" data-en="Tashkent -> Bukhara (High-speed Rail)">塔什干 -> 布哈拉 (高鐵)</td>
+                            <td class="px-4 py-3" data-zh="伊曼酒店" data-en="Iman Hotel">伊曼酒店</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">6/21</td>
+                            <td class="px-4 py-3" data-zh="布哈拉 -> 撒馬爾罕 (高鐵)" data-en="Bukhara -> Samarkand (High-speed Rail)">布哈拉 -> 撒馬爾罕 (高鐵)</td>
+                            <td class="px-4 py-3" data-zh="桑佐精品酒店" data-en="Sangzor Boutique Hotel">桑佐精品酒店</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">6/22</td>
+                            <td class="px-4 py-3" data-zh="撒馬爾罕市區" data-en="Samarkand City">撒馬爾罕市區</td>
+                            <td class="px-4 py-3" data-zh="桑佐精品酒店" data-en="Sangzor Boutique Hotel">桑佐精品酒店</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">6/23</td>
+                            <td class="px-4 py-3" data-zh="撒馬爾罕 -> 杜尚別 (跨國火車)" data-en="Samarkand -> Dushanbe (Int'l Train)">撒馬爾罕 -> 杜尚別 (跨國火車)</td>
+                            <td class="px-4 py-3" data-zh="火車上" data-en="On Train">火車上</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">6/24-25</td>
+                            <td class="px-4 py-3" data-zh="杜尚別市區 & 努雷克湖" data-en="Dushanbe City & Lake Nurek">杜尚別市區 & 努雷克湖</td>
+                            <td class="px-4 py-3" data-zh="Rumi Hotel" data-en="Rumi Hotel">Rumi Hotel</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">6/26</td>
+                            <td class="px-4 py-3" data-zh="伊斯坎達爾湖" data-en="Iskandarkul Lake">伊斯坎達爾湖</td>
+                            <td class="px-4 py-3" data-zh="當地居民家" data-en="Local Homestay">當地居民家</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">6/27</td>
+                            <td class="px-4 py-3" data-zh="吉薩爾堡壘" data-en="Hissor Fortress">吉薩爾堡壘</td>
+                            <td class="px-4 py-3" data-zh="Rumi Hotel" data-en="Rumi Hotel">Rumi Hotel</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">6/28</td>
+                            <td class="px-4 py-3" data-zh="杜尚別 -> 塔什干 (飛機)" data-en="Dushanbe -> Tashkent (Flight)">杜尚別 -> 塔什干 (飛機)</td>
+                            <td class="px-4 py-3" data-zh="舒克亞宏飯店" data-en="Shukriya Hotel">舒克亞宏飯店</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">6/29</td>
+                            <td class="px-4 py-3" data-zh="塔什干伊斯蘭文化巡禮" data-en="Tashkent City Tour">塔什干伊斯蘭文化巡禮</td>
+                            <td class="px-4 py-3" data-zh="舒克亞宏飯店" data-en="Shukriya Hotel">舒克亞宏飯店</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">6/30</td>
+                            <td class="px-4 py-3" data-zh="塔什干 -> 北京 (飛機)" data-en="Tashkent -> Beijing (Flight)">塔什干 -> 北京 (飛機)</td>
+                            <td class="px-4 py-3" data-zh="飛機上" data-en="On Flight">飛機上</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">7/1</td>
+                            <td class="px-4 py-3" data-zh="北京 -> 台北桃園 (飛機)" data-en="Beijing -> Taipei (Flight)">北京 -> 台北桃園 (飛機)</td>
+                            <td class="px-4 py-3" data-zh="溫暖的家" data-en="Sweet Home">溫暖的家</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ================= [ 視圖 3: 實用工具 ] ================= -->
+        <div id="view-tools" class="hidden px-4 py-6">
+            
+            <h2 class="text-2xl font-bold text-muji-dark mb-4">目的地地圖</h2>
+            <div class="bg-gray-200 w-full h-64 rounded-xl flex items-center justify-center mb-8 relative overflow-hidden">
+                <!-- iframe 預設區塊 -->
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1430487.8931105407!2d68.10656094367503!3d41.31115160275811!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8b0cc379e9c3%3A0xa5a9323b4aa5cb98!2z54OP6Iyo5YWL5pav5Z2m!5e0!3m2!1szh-TW!2stw!4v1716900000000!5m2!1szh-TW!2stw" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+
+            <h2 class="text-2xl font-bold text-muji-dark mb-4">行李 Checklist</h2>
+            <div class="bg-white p-5 rounded-xl shadow-sm mb-8 border border-gray-100">
+                <ul class="space-y-3">
+                    <li class="flex items-center"><input type="checkbox" class="mr-3 w-5 h-5 text-muji-accent focus:ring-muji-accent border-gray-300 rounded"> 護照與紙本簽證 (重要)</li>
+                    <li class="flex items-center"><input type="checkbox" class="mr-3 w-5 h-5 text-muji-accent focus:ring-muji-accent border-gray-300 rounded"> 美金現金 (當地換匯用)</li>
+                    <li class="flex items-center"><input type="checkbox" class="mr-3 w-5 h-5 text-muji-accent focus:ring-muji-accent border-gray-300 rounded"> 萬用轉接頭與行動電源</li>
+                    <li class="flex items-center"><input type="checkbox" class="mr-3 w-5 h-5 text-muji-accent focus:ring-muji-accent border-gray-300 rounded"> 腸胃藥、個人常備藥物</li>
+                    <li class="flex items-center"><input type="checkbox" class="mr-3 w-5 h-5 text-muji-accent focus:ring-muji-accent border-gray-300 rounded"> 防曬乳、帽子與墨鏡 (中亞陽光強)</li>
+                </ul>
+                <p class="text-xs text-gray-400 mt-4">*可自行修改文字內容</p>
+            </div>
+
+            <h2 class="text-2xl font-bold text-muji-dark mb-4">推薦伴手禮</h2>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                    <li>特色堅果與無花果乾 (西亞布市集/楚蘇巴扎)</li>
+                    <li>烏茲別克手工彩繪陶瓷與茶具</li>
+                    <li>手工絲綢圍巾與地毯</li>
+                    <li>塔吉克特色蜂蜜</li>
+                </ul>
+                <p class="text-xs text-gray-400 mt-4">*可自行修改文字內容</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ================= [ 計程車卡 Modal ] ================= -->
+    <div id="taxiModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300 px-4">
+        <div class="bg-white w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="taxiModalBox">
+            <div class="bg-yellow-400 p-4 text-center">
+                <h3 class="text-xl font-bold text-black"><i class="fas fa-taxi mr-2"></i>給司機看</h3>
+            </div>
+            <div class="p-8 text-center">
+                <p class="text-sm text-gray-500 mb-2">請載我到這裡：</p>
+                <!-- 大字體地址區塊 -->
+                <h2 id="taxiAddress" class="text-3xl font-bold text-black leading-snug break-words"></h2>
+                <p id="taxiName" class="text-md text-gray-400 mt-4 font-bold"></p>
+            </div>
+            <div class="p-4 bg-gray-50 text-center">
+                <button onclick="closeTaxi()" class="bg-gray-800 text-white px-8 py-3 rounded-full font-bold w-full hover:bg-black transition">
+                    關閉
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS 邏輯 -->
+    <script>
+        // 1. 天數切換邏輯
+        function showDay(dayIndex) {
+            // 隱藏所有 day
+            document.querySelectorAll('.day-content').forEach(el => el.classList.add('hidden'));
+            // 顯示目標 day
+            const targetDay = document.getElementById(`day-${dayIndex}`);
+            if(targetDay) targetDay.classList.remove('hidden');
+
+            // 更新按鈕樣式
+            for(let i=1; i<=14; i++){
+                const btn = document.getElementById(`dayBtn-${i}`);
+                if(btn){
+                    if(i === dayIndex) {
+                        btn.classList.remove('bg-muji-light', 'text-muji-text', 'hover:bg-gray-200');
+                        btn.classList.add('bg-muji-dark', 'text-white');
+                    } else {
+                        btn.classList.remove('bg-muji-dark', 'text-white');
+                        btn.classList.add('bg-muji-light', 'text-muji-text', 'hover:bg-gray-200');
+                    }
+                }
+            }
+        }
+
+        // 2. 主導航切換邏輯
+        function switchMainTab(tabName) {
+            const tabs = ['itinerary', 'customs', 'tools'];
+            tabs.forEach(tab => {
+                document.getElementById(`view-${tab}`).classList.add('hidden');
+                const btn = document.getElementById(`tabBtn-${tab}`);
+                btn.classList.remove('text-muji-dark', 'border-muji-accent');
+                btn.classList.add('text-gray-400', 'border-transparent');
+            });
+
+            document.getElementById(`view-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tabBtn-${tabName}`);
+            activeBtn.classList.remove('text-gray-400', 'border-transparent');
+            activeBtn.classList.add('text-muji-dark', 'border-muji-accent');
+        }
+
+        // 3. 計程車卡 Modal 邏輯
+        function openTaxi(name, address) {
+            document.getElementById('taxiName').innerText = name;
+            document.getElementById('taxiAddress').innerText = address;
+            
+            const modal = document.getElementById('taxiModal');
+            const box = document.getElementById('taxiModalBox');
+            
+            modal.classList.remove('hidden');
+            // 小延遲以確保 transition 生效
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+                box.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeTaxi() {
+            const modal = document.getElementById('taxiModal');
+            const box = document.getElementById('taxiModalBox');
+            
+            modal.classList.add('opacity-0');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // 點擊背景關閉
+        document.getElementById('taxiModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTaxi();
+            }
+        });
+
+        // 4. 中英切換邏輯
+        let isEnglish = false;
+        function toggleLang() {
+            isEnglish = !isEnglish;
+            const elements = document.querySelectorAll('[data-zh]');
+            elements.forEach(el => {
+                el.innerText = isEnglish ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+            });
+        }
+    </script>
+</body>
+</html>
